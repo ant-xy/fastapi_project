@@ -2,7 +2,22 @@ from typing import Annotated
 from sqlmodel import Field, Session, SQLModel, create_engine, select, UniqueConstraint
 from fastapi import Depends, FastAPI
 
-mysql_url = f"mysql+mysqlconnector://root:example@127.0.0.0:33061/mysql"
+import os
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_HOST = os.getenv("DB_HOST")
+DB_PORT = os.getenv("DB_PORT")
+DB_NAME = os.getenv("DB_NAME")
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM")
+
+mysql_url = f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 engine = create_engine(mysql_url)
 
