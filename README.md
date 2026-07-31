@@ -47,3 +47,15 @@
 
 ## JSON Web Token Contents
 - the JWT token contains the `user` (username of the user logging in) and the `exp` (expiry) of the token.
+
+# Token Validation
+- validate a token at endpoint `/token_valid` using the `POST` method.
+```json
+{
+  "jwt": <jwt token>,
+  "token_type": <token type>
+}
+``` 
+
+## Returns
+- if token is valid, returns a `Token` object **else** raises `HTTPException`
