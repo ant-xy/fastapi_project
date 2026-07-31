@@ -1,5 +1,6 @@
 from typing import Annotated
 from fastapi import Depends, FastAPI, HTTPException, Query, status
+import sqlalchemy
 from sqlmodel import select
 
 from models.users import UsersBase, Users, UsersCreate, UsersRead, Payload, UserLogin, Token
@@ -28,12 +29,16 @@ async def create_user(user: UsersCreate, session: SessionDep):
     user = Users.model_validate(user)
     print(user.password)
     user.password = password_hash.hash(user.password)
-    session.add(user)
-    session.commit()
-    session.refresh(user)
+
+    try:
+        session.add(user)
+        session.commit()
+        session.refresh(user)
+    except sqlalchemy.exc.IntegrityError as ex:
+        return "Something went wrong, try again later"
     return user
 
-@app.get("/user/{user_id}")
+@app.get("/user/")
 async def check_user(user_id: int, session: SessionDep):
     user = session.get(Users, user_id)
 
@@ -41,7 +46,6 @@ async def check_user(user_id: int, session: SessionDep):
         all_users = session.exec(select(Users)).all()
         payload = Payload(status=200, message="success", data=all_users)
         return payload
-
 
     payload = Payload(status=200, message="success", data=user)
     return payload
