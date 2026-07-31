@@ -3,6 +3,8 @@ from fastapi import Depends, FastAPI, HTTPException, Query, status
 import sqlalchemy
 from sqlmodel import select
 
+from jwt.exceptions import InvalidTokenError
+
 from models.users import UsersBase, Users, UsersCreate, UsersRead, Payload, UserLogin, Token
 from core.session import SessionDep
 
@@ -23,6 +25,24 @@ ALGORITHM = os.getenv("ALGORITHM")
 password_hash = PasswordHash((BcryptHasher(),))
 
 app = FastAPI()
+
+@app.post("/token_valid/")
+async def validate_jwt(token: Token) -> Token:
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token.jwt, SECRET_KEY, algorithms=[ALGORITHM])
+        username = payload.get("user")
+
+        if username is None:
+            raise credentials_exception
+    except InvalidTokenError:
+        print("INVALID TOKEN")
+        raise credentials_exception
+    return token
 
 @app.post("/user/")
 async def create_user(user: UsersCreate, session: SessionDep):
