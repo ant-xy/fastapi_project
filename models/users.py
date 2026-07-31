@@ -10,7 +10,7 @@ class UsersBase(SQLModel):
     username: str
 
 class Users(UsersBase, table=True):
-    id: Annotated[int, Field(default=None, primary_key=True)]
+    id: Annotated[int | None, Field(default=None, primary_key=True)]
     password: str
 
 class UsersCreate(UsersBase):

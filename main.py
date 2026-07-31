@@ -27,7 +27,6 @@ app = FastAPI()
 @app.post("/user/")
 async def create_user(user: UsersCreate, session: SessionDep):
     user = Users.model_validate(user)
-    print(user.password)
     user.password = password_hash.hash(user.password)
 
     try:
@@ -68,7 +67,7 @@ async def login_user(detail: UserLogin, session: SessionDep):
 
     if user and password_hash.verify(detail.password, user.password):
         token_jwt = create_access_token({"user": user.username}, expires_delta=timedelta(days=3))
-        token = Token(jwt=token_jwt, token_type=ALGORITHM)
+        token = Token(jwt=token_jwt, token_type="bearer")
         return token
     else:
         #prevent timebased attacks
