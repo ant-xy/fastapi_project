@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 from typing import Annotated
 from fastapi import Depends, FastAPI, HTTPException, Query, status
 import sqlalchemy
@@ -80,10 +81,19 @@ from fastapi import FastAPI
 
 app = FastAPI()
 
+=======
+from fastapi import FastAPI
+
+app = FastAPI()
+
+>>>>>>> Stashed changes
 from app.api.routers.users import router as user_router
 from app.api.routers.auth import router as auth_router
 
 app.include_router(user_router)
 app.include_router(auth_router)
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
