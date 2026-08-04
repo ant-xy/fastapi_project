@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 from typing import Annotated
 from fastapi import Depends, FastAPI, HTTPException, Query, status
 import sqlalchemy
@@ -74,3 +75,15 @@ async def login_user(detail: UserLogin, session: SessionDep):
         password_hash.verify(detail.password, random_key)
         token_jwt = create_access_token({"user": "abc"}, expires_delta=timedelta(days=3))
         return "Username or password incorrect."
+=======
+from fastapi import FastAPI
+
+app = FastAPI()
+
+from app.api.routers.users import router as user_router
+from app.api.routers.auth import router as auth_router
+
+app.include_router(user_router)
+app.include_router(auth_router)
+
+>>>>>>> Stashed changes

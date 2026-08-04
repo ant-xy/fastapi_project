@@ -1,7 +1,5 @@
 from typing import Annotated
-from sqlmodel import Field, Session, SQLModel, create_engine, select, UniqueConstraint
-from pydantic import BaseModel
-
+from sqlmodel import Field, SQLModel, UniqueConstraint
 
 class UsersBase(SQLModel):
     __table_args__ = (
@@ -18,16 +16,3 @@ class UsersCreate(UsersBase):
 
 class UsersRead(UsersBase):
     id: int
-
-class Payload(BaseModel):
-    status: int
-    message: str
-    data: list[UsersRead] | UsersRead
-
-class UserLogin(BaseModel):
-    username: str
-    password: str
-
-class Token(BaseModel):
-    jwt: str
-    token_type: str
