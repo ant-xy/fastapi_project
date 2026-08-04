@@ -1,3 +1,4 @@
+from sqlalchemy.engine.interfaces import ExecuteStyle
 from sqlmodel import select
 
 from jwt.exceptions import InvalidTokenError
@@ -31,10 +32,10 @@ def login_user(detail: UserLogin, session: SessionDep):
 
     try:
         password_hash = password_hasher.verify(detail.password, user.password)
-    except InvalidTokenError, exceptions.UnknownHashError:
+    except Exception:
         return "Something went wrong!"
 
-    if password_hash and user:
+    if user and password_hash:
         token_jwt = auth.create_access_token({"user": user.username}, expires_delta=timedelta(days=3))
         token = Token(jwt=token_jwt, token_type="bearer")
         return token
