@@ -1,12 +1,13 @@
 from sqlalchemy.engine.interfaces import ExecuteStyle
 from sqlmodel import select
 
+import jwt
 from jwt.exceptions import InvalidTokenError
 from pwdlib import PasswordHash, exceptions
 from pwdlib.hashers.bcrypt import BcryptHasher
 
 from datetime import datetime, timedelta, timezone
-import jwt
+
 from app.core.config import settings
 from app.models.users_model import Users
 
@@ -14,7 +15,21 @@ from app.schemas.request.users_request import UserLogin, Token
 from app.core.session import SessionDep
 import app.services.auth_service as auth
 
+
 password_hasher = PasswordHash((BcryptHasher(),))
+
+def validate_jwt_token(token: Token):
+
+    try:
+        payload = jwt.decode(token.jwt, settings.secret_key, algorithms=[settings.algorithm])
+        username = payload.get("user")
+
+        if username is None:
+            return None
+    except InvalidTokenError:
+        return None
+    return token
+
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()

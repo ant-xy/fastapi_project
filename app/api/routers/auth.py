@@ -21,13 +21,10 @@ async def validate_jwt(token: Token) -> Token:
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
-    try:
-        payload = jwt.decode(token.jwt, settings.secret_key, algorithms=[settings.algorithm])
-        username = payload.get("user")
 
-        if username is None:
-            raise credentials_exception
-    except InvalidTokenError:
+    validated_token = auth_service.validate_jwt_token(token)
+
+    if validated_token == None:
         raise credentials_exception
     return token
 
