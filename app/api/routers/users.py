@@ -1,6 +1,6 @@
 import sqlalchemy
 
-from fastapi import APIRouter, Depends, FastAPI, HTTPException
+from fastapi import APIRouter, Depends, FastAPI, HTTPException, Request
 
 from sqlmodel import select
 
@@ -14,7 +14,7 @@ app = FastAPI()
 router = APIRouter(prefix="/user", tags=["user"])
 
 @router.post("/")
-async def create_user(user: UsersCreate, session: SessionDep):
+async def create_user(user: UsersCreate, session: SessionDep, request: Request):
     user = Users.model_validate(user)
     user = users_service.hash_password_user(user)
     

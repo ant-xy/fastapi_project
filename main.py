@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 
 app = FastAPI()
 
@@ -7,3 +7,5 @@ from app.api.routers.auth import router as auth_router
 
 app.include_router(user_router)
 app.include_router(auth_router)
+
+from app.middleware.rate_limit_request import add_rate_limit

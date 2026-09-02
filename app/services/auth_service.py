@@ -19,7 +19,6 @@ import app.services.auth_service as auth
 password_hasher = PasswordHash((BcryptHasher(),))
 
 def validate_jwt_token(token: Token):
-
     try:
         payload = jwt.decode(token.jwt, settings.secret_key, algorithms=[settings.algorithm])
         username = payload.get("user")
